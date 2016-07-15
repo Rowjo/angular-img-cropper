@@ -9,10 +9,15 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
             touchRadius: "=",
             cropAreaBounds: "=",
             minWidth: "=",
-            minHeight: "="
+            minHeight: "=",
+            rectColor: "=",
+            overlayColor: "="
         },
         restrict: "A",
         link: function (scope, element) {
+            if (!scope.rectColor) scope.rectColor = "rgba(255,0,0,1)";
+            if (!scope.overlayColor) scope.overlayColor = "rgba(1,1,1,0.7)";
+
             var crop;
             var __extends = __extends || function (d, b) {
                     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -159,7 +164,10 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                         ctx.lineTo(p.x + this.position.x, p.y + this.position.y);
                     }
                     ctx.closePath();
-                    ctx.fillStyle = 'rgba(255,228,0,1)';
+                    console.log(scope.rectColor);
+                    console.log(scope.keepAspect);
+
+                    ctx.fillStyle = scope.rectColor;
                     ctx.fill();
                 };
                 DragMarker.prototype.recalculatePosition = function (bounds) {
@@ -197,7 +205,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     ctx.lineTo(this.position.x, this.position.y);
                     ctx.closePath();
                     ctx.lineWidth = 2;
-                    ctx.strokeStyle = 'rgba(255,228,0,1)';
+                    ctx.strokeStyle = scope.rectColor;
                     ctx.stroke();
                 };
                 CornerMarker.prototype.drawCornerFill = function (ctx) {
@@ -419,8 +427,8 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                             this.drawImageIOSFix(ctx, this.srcImage, 0, 0, this.srcImage.width, this.srcImage.height, 0, this.buffer.height / 2 - h / 2, w, h);
                         }
                         this.buffer.getContext('2d').drawImage(this.canvas, 0, 0, this.canvasWidth, this.canvasHeight);
-                        ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-                        ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+                        ctx.fillStyle = scope.overlayColor;
+                        ctx.fillRect((this.canvasWidth - w) / 2, (this.canvasHeight - h) / 2, w, h);
                         ctx.drawImage(this.buffer, bounds.left, bounds.top, Math.max(bounds.getWidth(), 1), Math.max(bounds.getHeight(), 1), bounds.left, bounds.top, bounds.getWidth(), bounds.getHeight());
                         var marker;
                         for (var i = 0; i < this.markers.length; i++) {
@@ -429,12 +437,8 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                         }
                         this.center.draw(ctx);
                         ctx.lineWidth = 2;
-                        ctx.strokeStyle = 'rgba(255,228,0,1)';
+                        ctx.strokeStyle = scope.rectColor;
                         ctx.strokeRect(bounds.left, bounds.top, bounds.getWidth(), bounds.getHeight());
-                    }
-                    else {
-                        ctx.fillStyle = 'rgba(192,192,192,1)';
-                        ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
                     }
                 };
                 ImageCropper.prototype.dragCrop = function (x, y, marker) {
