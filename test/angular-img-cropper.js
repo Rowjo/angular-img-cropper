@@ -358,7 +358,7 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     this.isMouseDown = false;
                     this.ratioW = 1;
                     this.ratioH = 1;
-                    this.fileType = 'png';
+                    this.fileType = 'jpeg';
                     this.imageSet = false;
                     this.pointPool = new PointPool(200);
                     CropService.init(canvas);
@@ -865,9 +865,6 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                     bufferContext.clearRect(0, 0, this.buffer.width, this.buffer.height);
                     var splitName = img.src.split('.');
                     var fileType = splitName[1];
-                    if (fileType == 'png' || fileType == 'jpg') {
-                        this.fileType = fileType;
-                    }
                     this.srcImage = img;
                     this.updateClampBounds();
                     var sourceAspect = this.srcImage.height / this.srcImage.width;
