@@ -164,6 +164,8 @@ angular.module('angular-img-cropper', []).directive("imageCropper", ['$document'
                         ctx.lineTo(p.x + this.position.x, p.y + this.position.y);
                     }
                     ctx.closePath();
+                    console.log(scope.rectColor);
+                    console.log(scope.keepAspect);
 
                     ctx.fillStyle = scope.rectColor;
                     ctx.fill();
